@@ -18,5 +18,6 @@ public class Patient {
     private Date dateNaissance ;
     private boolean malade ;
     @OneToMany(mappedBy = "patient",fetch = FetchType.LAZY)
+
     private Collection<RendezVous> rendezVous;
 }

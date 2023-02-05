@@ -5,6 +5,7 @@ import ma.ehtp.hostpital.repositories.ConsultationRepository;
 import ma.ehtp.hostpital.repositories.MedecinRepository;
 import ma.ehtp.hostpital.repositories.PatientRepository;
 import ma.ehtp.hostpital.repositories.RendezVousRepository;
+import ma.ehtp.hostpital.services.HospitalServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,10 +22,10 @@ public class HibernateJpaApplication {
     }
 
     @Bean
-    CommandLineRunner start(PatientRepository patientRepository,
+    CommandLineRunner start(HospitalServiceImpl hospitalService,
+                            PatientRepository patientRepository,
                             MedecinRepository medecinRepository,
-                            RendezVousRepository rendezVousRepository,
-                            ConsultationRepository consultationRepository){
+                            RendezVousRepository rendezVousRepository){
         return args -> {
             //Patient patient = new Patient(null,"said",new Date(),false,null);
             Stream.of("mohammed","said","khalid")
@@ -33,7 +34,7 @@ public class HibernateJpaApplication {
                         patient.setNom(name);
                         patient.setDateNaissance(new Date());
                         patient.setMalade(false);
-                        patientRepository.save(patient);
+                        hospitalService.savePatient(patient);
 
                     });
             Stream.of("medecin1","medecin2","medecin3")
@@ -42,7 +43,7 @@ public class HibernateJpaApplication {
                         medecin.setNom(name);
                         medecin.setEmail(name+"@gmail.com");
                         medecin.setSpecialite(Math.random()>0.5?"Cardio":"Dentiste");
-                        medecinRepository.save(medecin);
+                        hospitalService.saveMedecin(medecin);
 
                     });
             Patient patient=patientRepository.findByNom("said");
@@ -53,14 +54,15 @@ public class HibernateJpaApplication {
             rendezVous.setStatus(StatusRDV.PENDING);
             rendezVous.setPatient(patient);
             rendezVous.setMedecin(medecin);
-            rendezVousRepository.save(rendezVous);
+            hospitalService.saveRendezVous(rendezVous);
 
-            RendezVous rendezVous1=rendezVousRepository.findById(1L).orElse(null);
+           // RendezVous rendezVous1=rendezVousRepository.findById(1L).orElse(null);
+           RendezVous rendezVous1=rendezVousRepository.findAll().get(0);
             Consultation consultation=new Consultation();
             consultation.setDateConsultation(new Date());
             consultation.setRendezVous(rendezVous1);
             consultation.setRapport("Rapport de la consultation");
-            consultationRepository.save(consultation);
+            hospitalService.saveConsultation(consultation);
 
 
 

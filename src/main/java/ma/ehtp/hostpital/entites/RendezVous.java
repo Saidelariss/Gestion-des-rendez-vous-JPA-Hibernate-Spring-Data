@@ -1,5 +1,6 @@
 package ma.ehtp.hostpital.entites;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,12 +12,13 @@ import java.util.Date;
 @NoArgsConstructor @AllArgsConstructor
 public class RendezVous {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  //  @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
     private Date date;
     @Enumerated(EnumType.STRING)//enregistrer ce type enuméré en tant que string dans la base de données au lieu de l'associer à un int
     private StatusRDV status;
     @ManyToOne
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Patient patient;
     @ManyToOne
     private Medecin medecin;
